@@ -13,6 +13,7 @@ package bbox;
 //This file does the BitManip computation and returns the result. 
 `include "compute.bsv"
 
+
 // This file has the structures being used.
 // Any new structures or enum or union tagged can be included here.
 import bbox_types :: *;
