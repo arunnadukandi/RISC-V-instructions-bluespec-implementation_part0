@@ -177,10 +177,6 @@ def bbox_rm(instr, rs1, rs2, XLEN):
             neg_rs2 = twos_complement(rs2,length_rs2)
             res = max(neg_rs1,int(neg_rs2,2))
         valid='1'
-
-
-
-
         # res = max(rs1,rs2)
         # valid ='1'
 
@@ -207,14 +203,15 @@ def bbox_rm(instr, rs1, rs2, XLEN):
         valid='1'
 
 
-
-
-
-
-
     # logic for finding min of two Unsigned numbers
     elif instr == values[12]:
         res = min(rs1,rs2)
+        valid ='1'
+
+    # logic for bclr (register)
+    elif instr == values[13]:
+        index = rs2 & (XLEN-1)
+        res = rs1 & ~(1 << index)
         valid ='1'
 
     ## logic for all other instr ends

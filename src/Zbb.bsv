@@ -209,6 +209,12 @@ function Bit#(XLEN) fn_minU(Bit#(XLEN) rs1,Bit#(XLEN) rs2);
   return result;
 endfunction
 
+function Bit#(XLEN) fn_bclr(Bit#(XLEN) rs1, Bit#(XLEN) rs2);
+  Bit#(XLEN) result;
+  let index = rs2 & (fromInteger(valueOf(XLEN)-1));
+  result = rs1 & ~(1 << index);
 
+  return result;
+endfunction
 
   

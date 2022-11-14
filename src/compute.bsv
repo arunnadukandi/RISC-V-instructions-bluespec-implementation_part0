@@ -92,6 +92,10 @@ function BBoxOutput fn_compute(BBoxInput inp);
       result = fn_minU(inp.rs1, inp.rs2);    // fn to find min amongst two Unsigned numbers
       valid = True;
     end
+    `BCLR: begin
+      result = fn_bclr(inp.rs1, inp.rs2);    // fn to do bit clear (register)
+      valid =True;
+    end
       default: begin
       result = 0;
       valid = False;

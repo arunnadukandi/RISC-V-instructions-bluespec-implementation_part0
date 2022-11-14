@@ -53,7 +53,9 @@ specs = {'addn'  : 0b01000000000000000111000000110011,
         'max'    : 0b00001010000000000110000000110011,
         'maxu'   : 0b00001010000000000111000000110011,
         'min'    : 0b00001010000000000100000000110011,
-        'minu'   : 0b00001010000000000101000000110011
+        'minu'   : 0b00001010000000000101000000110011,
+        'blcr'   : 0b01001000000000000001000000110011
+       
     
 }
 
@@ -110,8 +112,8 @@ async def TB(dut, XLEN, instr, instr_name, single_opd, num_of_tests):
     for i in range (num_of_tests):
         rs1 = random.randint(0,(2**XLEN)-1) 
         rs2 = random.randint(0,(2**XLEN)-1)
-        # rs1 = 10
-        # rs2 = 5
+        # rs1 = 15345
+        # rs2 = 3
         rm_result = bbox_rm(instr, rs1, rs2, XLEN)
     
         await input_driver(dut, instr, rs1, rs2, single_opd)
@@ -259,6 +261,13 @@ elif base == 'RV64':
                 # min of unsigned numbers
                 elif(encoding[17:20] == '101' and encoding[25:32] == '0110011'):  
                     tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding), 'minU', 0)])   
+                    tf.generate_tests(postfix=i)
+
+            # Checking for SIngle bit register operation OP COdes
+            elif(encoding[:7] == '0100100'):
+                # Checking for bclr  Single bit clear (register)
+                if(encoding[17:20] == '001' and encoding[25:32] == '0110011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding), 'bclr', 0)])   
                     tf.generate_tests(postfix=i)
 
             i+=1
