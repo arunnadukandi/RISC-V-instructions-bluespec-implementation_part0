@@ -96,6 +96,10 @@ function BBoxOutput fn_compute(BBoxInput inp);
       result = fn_bclr(inp.rs1, inp.rs2);    // fn to do bit clear (register)
       valid =True;
     end
+    `BCLRI: begin
+      result = fn_bclri(inp.instr, inp.rs1);    // fn to do bit clear (immediate)
+      valid =True;
+    end
       default: begin
       result = 0;
       valid = False;

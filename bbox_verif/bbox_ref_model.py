@@ -213,6 +213,15 @@ def bbox_rm(instr, rs1, rs2, XLEN):
         index = rs2 & (XLEN-1)
         res = rs1 & ~(1 << index)
         valid ='1'
+    
+    # logic implemeting bclri (immediate)
+
+    elif instr == values[14]:
+        shamt = instr
+        index = rs2 & (XLEN-1)
+        res = rs1 & ~(1 << index)
+        #res = shamt
+        valid ='1'
 
     ## logic for all other instr ends
     else:

@@ -133,14 +133,6 @@ function Bit#(XLEN) fn_max(Bit#(XLEN) rs1,Bit#(XLEN) rs2);
     result = (max_rs1 < rs2) ? rs2 : max_rs1;   // assigning largest
   end
   
-  // if (rs2 < 0 && rs1 > 0) begin
-    // neg_rs2 = ~rs2;   // negating the input value
-    // max_rs2 = (rs2 < neg_rs2) ? neg_rs2 : rs2;    // assigning the max amongst rs1 and ~rs1 to max_rs1
-    
-    // result = (max_rs2 < rs1) ? rs1 : max_rs2;   // assigning largest
-  // end
-
-  
     return result;
 endfunction
 
@@ -209,11 +201,23 @@ function Bit#(XLEN) fn_minU(Bit#(XLEN) rs1,Bit#(XLEN) rs2);
   return result;
 endfunction
 
+// Function to clear bit based on index - bclr
+
 function Bit#(XLEN) fn_bclr(Bit#(XLEN) rs1, Bit#(XLEN) rs2);
   Bit#(XLEN) result;
   let index = rs2 & (fromInteger(valueOf(XLEN)-1));
   result = rs1 & ~(1 << index);
 
+  return result;
+endfunction
+
+// Function to bit clear (immediate) bclri
+function Bit#(XLEN) fn_bclri(Bit#(32) instr , Bit#(XLEN) rs1);
+  let shamt = instr;
+  Bit#(XLEN) result;
+  let index = shamt & (fromInteger(valueOf(XLEN)-1));
+  result = rs1 & ~(1 << index);
+  // let shamt = fromInteger(instr);
   return result;
 endfunction
 

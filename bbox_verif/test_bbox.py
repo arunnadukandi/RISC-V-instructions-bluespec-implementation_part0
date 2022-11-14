@@ -54,7 +54,8 @@ specs = {'addn'  : 0b01000000000000000111000000110011,
         'maxu'   : 0b00001010000000000111000000110011,
         'min'    : 0b00001010000000000100000000110011,
         'minu'   : 0b00001010000000000101000000110011,
-        'blcr'   : 0b01001000000000000001000000110011
+        'bclr'   : 0b01001000000000000001000000110011,
+        'bclri'  : 0b01001000000000000001000000010011
        
     
 }
@@ -110,10 +111,10 @@ async def TB(dut, XLEN, instr, instr_name, single_opd, num_of_tests):
     dut._log.info("------------- Test %r of RV%d starts --------------" %(instr_name,XLEN))
     dut._log.info("*******************************************************")
     for i in range (num_of_tests):
-        rs1 = random.randint(0,(2**XLEN)-1) 
-        rs2 = random.randint(0,(2**XLEN)-1)
-        # rs1 = 15345
-        # rs2 = 3
+        # rs1 = random.randint(0,(2**XLEN)-1) 
+        # rs2 = random.randint(0,(2**XLEN)-1)
+        rs1 = 14
+        rs2 = 15
         rm_result = bbox_rm(instr, rs1, rs2, XLEN)
     
         await input_driver(dut, instr, rs1, rs2, single_opd)
@@ -263,12 +264,22 @@ elif base == 'RV64':
                     tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding), 'minU', 0)])   
                     tf.generate_tests(postfix=i)
 
-            # Checking for SIngle bit register operation OP COdes
+            # Checking for Single bit register operation OP Codes
             elif(encoding[:7] == '0100100'):
                 # Checking for bclr  Single bit clear (register)
                 if(encoding[17:20] == '001' and encoding[25:32] == '0110011'):
                     tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding), 'bclr', 0)])   
                     tf.generate_tests(postfix=i)
+
+            # Checking for Single bit immediate operation OP codes
+            
+            if(encoding[:6] == '010010'):
+                print("HELLO")
+                # checking for bclri - Single bit clear (immediate)
+                if(encoding[17:20] == '001' and encoding[25:32] == '0010011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding), 'bclri', 0)])   
+                    tf.generate_tests(postfix=i) 
+
 
             i+=1
 
