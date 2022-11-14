@@ -12,10 +12,10 @@ Details: The top function which calls the required function depending
 /****** Imports *******/
 `include "bbox.defines"
 import bbox_types :: *;
-`include "Zba.bsv"
+//`include "Zba.bsv"
 `include "Zbb.bsv"
 //`include "Zbc.bsv"
-//`include "Zbs.bsv"
+`include "Zbs.bsv"
 /*********************/
 
 
@@ -100,6 +100,30 @@ function BBoxOutput fn_compute(BBoxInput inp);
       result = fn_bclri(inp.instr, inp.rs1);    // fn to do bit clear (immediate)
       valid =True;
     end
+    `BEXT: begin
+      result = fn_bext(inp.rs1 , inp.rs1);    // fn to extract single bit (register) - bext
+      valid = True;
+    end 
+    `BEXTI: begin
+      result = fn_bexti(inp.instr, inp.rs1);    // fn to do bit extract (immediate)
+      valid =True;
+    end
+    `BINVI: begin
+      result = fn_binvi(inp.instr, inp.rs1);    // fn to do bit invert (immediate)
+      valid =True;
+    end
+    `BSET: begin
+      result = fn_bset(inp.rs1, inp.rs2);    // fn to do bit set (Register)
+      valid =True;
+    end
+    `BSETI: begin
+      result = fn_bseti(inp.instr,inp.rs1);   // fn to do bit set (immediate)
+      valid = True;
+    end 
+
+
+
+
       default: begin
       result = 0;
       valid = False;

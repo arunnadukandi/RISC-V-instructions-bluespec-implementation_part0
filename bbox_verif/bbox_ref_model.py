@@ -220,8 +220,41 @@ def bbox_rm(instr, rs1, rs2, XLEN):
         shamt = instr
         index = rs2 & (XLEN-1)
         res = rs1 & ~(1 << index)
-        #res = shamt
         valid ='1'
+
+    # logic for bext 
+    elif instr == values[15]:
+        index = rs2 & (XLEN-1)
+        res = (rs1 >> index) & 1
+        valid ='1'
+
+    # logic for bexti 
+    elif instr == values[16]:
+        shamt = instr
+        index = shamt & (XLEN-1)
+        res = (rs1 >> index) & 1
+        valid ='1'
+    
+    # logic for binvi 
+    elif instr == values[17]:
+        shamt = instr
+        index = shamt & (XLEN-1)
+        res = rs1 ^ (1 << index)
+        valid ='1'
+    
+    # logic for  single bit set (Register) - bset
+    elif instr == values[18]:
+        index = rs2 & (XLEN-1)
+        res = rs1 | (1 << index)
+        valid ='1'
+    
+    # Logic for Single-set (immediate) - bseti
+    elif instr == values[19]:
+        shamt = instr
+        index = shamt & (XLEN-1)
+        res = rs1 | (1 << index)
+        valid ='1'
+
 
     ## logic for all other instr ends
     else:

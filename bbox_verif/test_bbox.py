@@ -55,7 +55,12 @@ specs = {'addn'  : 0b01000000000000000111000000110011,
         'min'    : 0b00001010000000000100000000110011,
         'minu'   : 0b00001010000000000101000000110011,
         'bclr'   : 0b01001000000000000001000000110011,
-        'bclri'  : 0b01001000000000000001000000010011
+        'bclri'  : 0b01001000000000000001000000010011,
+        'bext'   : 0b01001000000000000101000000110011,
+        'bexti'  : 0b01001000000000000101000000010011,
+        'binvi'  : 0b01101000000000000001000000010011,
+        'bset'   : 0b00101000000000000001000000110011,
+        'bseti'  : 0b00101000000000000001000000010011
        
     
 }
@@ -266,21 +271,51 @@ elif base == 'RV64':
 
             # Checking for Single bit register operation OP Codes
             elif(encoding[:7] == '0100100'):
+                
                 # Checking for bclr  Single bit clear (register)
                 if(encoding[17:20] == '001' and encoding[25:32] == '0110011'):
                     tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding), 'bclr', 0)])   
+                    tf.generate_tests(postfix=i)
+                
+                # Checking for bext - single bit extract (register)
+                elif(encoding[17:20] == '101' and encoding[25:32] == '0110011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding), 'bext', 1)])   
                     tf.generate_tests(postfix=i)
 
             # Checking for Single bit immediate operation OP codes
             
             if(encoding[:6] == '010010'):
-                print("HELLO")
+                
                 # checking for bclri - Single bit clear (immediate)
                 if(encoding[17:20] == '001' and encoding[25:32] == '0010011'):
                     tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding), 'bclri', 0)])   
                     tf.generate_tests(postfix=i) 
+                
+                # Checking for bexti -  Single bit extract (immediate)
+                elif(encoding[17:20] == '101' and encoding[25:32] == '0010011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding), 'bexti', 0)])   
+                    tf.generate_tests(postfix=i)
+            
+            # Checking for bit invert functions
+            elif(encoding[:6] == '011010'):
 
+                # Checking for bit invert (immediate)  -- binvi
+                if(encoding[17:20] == '001' and encoding[25:32] == '0010011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding), 'binvi', 0)])   
+                    tf.generate_tests(postfix=i)
 
+            # Checking for bit set Register and immediate
+            elif(encoding[:7] == '0010100' and encoding[:6] == '001010'):
+
+                # Checking for bit set register --  bset
+                if(encoding[17:20] =='001' and encoding[25:32] == '0110011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding), 'bset', 1)])   
+                    tf.generate_tests(postfix=i)
+
+                # Checking for bit set immediate --- bseti
+                if(encoding[17:20] == '001' and encoding[25:32] == '0010011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding), 'bseti', 0)])   
+                    tf.generate_tests(postfix=i)
             i+=1
 
 
