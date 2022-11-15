@@ -255,7 +255,121 @@ def bbox_rm(instr, rs1, rs2, XLEN):
         res = rs1 | (1 << index)
         valid ='1'
 
+    # New Additions
+    # Logic for sh1add
+    elif instr == values[20]:
+        res = rs2 + (rs1 << 1)
+        temp = '{:064b}'.format(res)
+        extrabits=len(temp)-64
+        if(len(temp) > 64):
+            temp = temp [extrabits+1:]
+        res = int(temp,2)
+        valid='1'
 
+    #Logic for sh2add
+    elif instr == values[21]:
+        res = rs2 + (rs1 << 2)
+        temp = '{:064b}'.format(res)
+        extrabits=len(temp)-64
+        if(len(temp) > 64):
+            temp = temp [extrabits:]
+        res = int(temp,2)
+        #print(bin(res))
+        valid='1'
+
+    #Logic for sh3add
+    elif instr == values[22]:
+        res = rs2 + (rs1 << 3)
+        temp = '{:064b}'.format(res)
+        extrabits=len(temp)-64
+        if(len(temp) > 64):
+            temp = temp [extrabits:]
+        res = int(temp,2)
+        #print(bin(res))
+        valid='1'
+
+    # Logic for adduw
+    elif instr == values[23]:
+        res=0
+        temp = '{:064b}'.format(rs1)
+        temp2 = 32 * '0' + temp[32:]
+        print(temp)
+        print(temp2)
+        rs1 = int(temp2,2)
+        res = rs1 + rs2
+        valid = '1'
+
+    # Logic for sh1adduw
+    elif instr == values[24]:
+        res=0
+        temp = '{:064b}'.format(rs1)
+        temp2 = temp[32:]
+        # temp2 <<= 1
+        print(temp)
+        print(temp2)
+        rs1 = int(temp2,2)
+        rs1 <<=1
+        print(rs1)
+        res = rs1 + rs2
+        valid = '1'
+
+    # Logic for sh2adduw
+    elif instr == values[25]:
+        res=0
+        temp = '{:064b}'.format(rs1)
+        temp2 = temp[32:]
+        # temp2 <<= 1
+        print(temp)
+        print(temp2)
+        rs1 = int(temp2,2)
+        rs1 <<=2
+        print(rs1)
+        res = rs1 + rs2
+        valid = '1'
+
+    # Logic for sh3adduw
+    elif instr == values[26]:
+        res=0
+        temp = '{:064b}'.format(rs1)
+        temp2 = temp[32:]
+        # temp2 <<= 1
+        print(temp)
+        print(temp2)
+        rs1 = int(temp2,2)
+        rs1 <<=3
+        print(rs1)
+        res = rs1 + rs2
+        valid = '1'
+
+    # Logic to find carry less multiplication (lower 16 bits)
+    elif instr == values[27]:
+        res=0
+        temp=0
+        while(rs2!=0):
+            res ^= rs1 * (rs2 & 1)
+            rs1<<=1
+            rs2>>=1
+        temp = '{:064b}'.format(res)
+        # print(temp[-16:])
+        temp=48 * '0'+temp[-16:]
+        # print(type(temp))
+        res=int(temp,2)
+        valid='1'
+
+    # Logic to find carry less multiplication (higher 16 bits)
+    elif instr == values[28]:
+        res=0
+        temp=0
+        while(rs2!=0):
+            res ^= rs1 * (rs2 & 1)
+            rs1<<=1
+            rs2>>=1
+        temp = '{:064b}'.format(res)
+        # print(temp[-31:-16])
+        temp=32 * '0'+temp[-31:-16]+16 * '0'
+        # print(type(temp))
+        res=int(temp,2)
+        valid='1'
     ## logic for all other instr ends
     else:
         res = 0

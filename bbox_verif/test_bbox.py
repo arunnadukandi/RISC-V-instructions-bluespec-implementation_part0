@@ -60,7 +60,16 @@ specs = {'addn'  : 0b01000000000000000111000000110011,
         'bexti'  : 0b01001000000000000101000000010011,
         'binvi'  : 0b01101000000000000001000000010011,
         'bset'   : 0b00101000000000000001000000110011,
-        'bseti'  : 0b00101000000000000001000000010011
+        'bseti'  : 0b00101000000000000001000000010011,
+        'sh1add' : 0b00100000000000000010000000110011,  #New Addtions
+        'sh2add' : 0b00100000000000000100000000110011,
+        'sh3add' : 0b00100000000000000110000000110011,
+        'adduw'  : 0b00001000000000000000000000111011,
+        'sh1adduw' : 0b00100000000000000010000000111011,
+        'sh2adduw' : 0b00100000000000000100000000111011,
+        'sh3adduw' : 0b00100000000000000110000000111011,
+        'clmul'  : 0b00001010000000000001000000110011,
+        'clmulh' : 0b00001010000000000011000000110011
        
     
 }
@@ -316,6 +325,50 @@ elif base == 'RV64':
                 if(encoding[17:20] == '001' and encoding[25:32] == '0010011'):
                     tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding), 'bseti', 0)])   
                     tf.generate_tests(postfix=i)
+
+            #New Additions
+
+            if(encoding[:7] == '0010000'):
+                if(encoding[17:20] == '010' and encoding[25:32] == '0110011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding),'sh1add',0)])   # pass sh1add values
+                    tf.generate_tests(postfix=i)
+
+                if(encoding[17:20] == '010'and encoding[25:32] == '0111011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding),'sh1adduw',0)])   # pass sh1adduw values
+                    tf.generate_tests(postfix=i)
+
+                if(encoding[17:20] == '100'and encoding[25:32] == '0111011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding),'sh2adduw',0)])   # pass sh2adduw values
+                    tf.generate_tests(postfix=i)
+
+                if(encoding[17:20] == '110'and encoding[25:32] == '0111011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding),'sh3adduw',0)])   # pass sh3adduw values
+                    tf.generate_tests(postfix=i)
+                
+                if(encoding[17:20] == '100' and encoding[25:32] == '0110011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding),'sh2add',0)])   # pass sh2add values
+                    tf.generate_tests(postfix=i)
+
+                if(encoding[17:20] == '110' and encoding[25:32] == '0110011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding),'sh3add',0)])   # pass sh3add values
+                    tf.generate_tests(postfix=i)
+
+            if(encoding[:7] == '0000100'):
+                if(encoding[17:20] == '000'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding),'adduw',0)])   # pass add.uw values
+                    tf.generate_tests(postfix=i)
+
+            
+            if(encoding[:7] == '0000101'):
+                if(encoding[17:20]=='001'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding),'clmul',0)])   # pass clmul values
+                    tf.generate_tests(postfix=i)
+
+                elif(encoding[17:20]=='011'):
+                    tf.add_option(('instr','instr_name','single_opd'), [(int(int_encoding),'clmulh',0)])   # pass clmulh values
+                    tf.generate_tests(postfix=i)
+
+
             i+=1
 
 

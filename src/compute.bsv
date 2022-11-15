@@ -12,9 +12,9 @@ Details: The top function which calls the required function depending
 /****** Imports *******/
 `include "bbox.defines"
 import bbox_types :: *;
-//`include "Zba.bsv"
+`include "Zba.bsv"
 `include "Zbb.bsv"
-//`include "Zbc.bsv"
+`include "Zbc.bsv"
 `include "Zbs.bsv"
 /*********************/
 
@@ -121,9 +121,42 @@ function BBoxOutput fn_compute(BBoxInput inp);
       valid = True;
     end 
 
-
-
-
+    `SH1ADD: begin
+      result = fn_sh1add(inp.rs1,inp.rs2); // fn to shift left bit by 1 and add to rs2
+      valid = True;
+    end
+    `SH2ADD: begin
+      result = fn_sh2add(inp.rs1,inp.rs2); // fn to shift left bit by 2 and add to rs2
+      valid = True;
+    end
+    `SH3ADD: begin
+      result = fn_sh3add(inp.rs1,inp.rs2); // fn to shift left bit by 3 and add to rs2
+      valid = True;
+    end
+    `ADDUW: begin
+      result = fn_adduw(inp.rs1,inp.rs2); // clear 32 bits of rs1 and add to rs2
+      valid = True;
+    end
+    `SH1ADDUW: begin
+      result = fn_sh1adduw(inp.rs1,inp.rs2); // fn to extract 32 bits from rs1 and shift by 1 and add yo rs2
+      valid = True;
+    end
+    `SH2ADDUW: begin
+      result = fn_sh2adduw(inp.rs1,inp.rs2); // fn to extract 32 bits from rs1 and shift by 2 and add yo rs2
+      valid = True;
+    end
+    `SH3ADDUW: begin
+      result = fn_sh3adduw(inp.rs1,inp.rs2); // fn to extract 32 bits from rs1 and shift by 3 and add yo rs2
+      valid = True;
+    end
+    `CLMUL: begin
+      result = fn_clmul(inp.rs1,inp.rs2); // fn to find carry less multiplication (lower 16 bit)
+      valid = True;
+    end
+    `CLMULH: begin
+      result = fn_clmulh(inp.rs1,inp.rs2); // fn to find carry less multiplication (higher 16 bit)
+      valid = True;
+    end
       default: begin
       result = 0;
       valid = False;
