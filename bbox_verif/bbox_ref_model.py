@@ -362,7 +362,7 @@ def bbox_rm(instr, rs1, rs2, XLEN):
         bin_rs1 = '{:064b}'.format(rs1)
         
         bin_rs2 = '{:064b}'.format(rs2)
-        lower_bits = int(mt.log2(XLEN),2)
+        lower_bits = int(mt.log2(XLEN))
         shamt = int(bin_rs2[59:])
         res = (rs1  << (shamt) ) | (rs1 >> (XLEN - shamt))
         valid ='1'
