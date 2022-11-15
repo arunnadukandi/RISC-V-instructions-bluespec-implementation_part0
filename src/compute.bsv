@@ -120,7 +120,6 @@ function BBoxOutput fn_compute(BBoxInput inp);
       result = fn_bseti(inp.instr,inp.rs1);   // fn to do bit set (immediate)
       valid = True;
     end 
-
     `SH1ADD: begin
       result = fn_sh1add(inp.rs1,inp.rs2); // fn to shift left bit by 1 and add to rs2
       valid = True;
@@ -155,6 +154,26 @@ function BBoxOutput fn_compute(BBoxInput inp);
     end
     `CLMULH: begin
       result = fn_clmulh(inp.rs1,inp.rs2); // fn to find carry less multiplication (higher 16 bit)
+      valid = True;
+    end
+    `ROL: begin
+      result = fn_rol(inp.rs1,inp.rs2);   // fn to rotate left
+      valid = True;
+    end
+    `ROR: begin
+      result = fn_ror(inp.rs1,inp.rs2);   // fn to rotate right
+      valid = True;
+    end
+    `ZEXTH: begin
+      result = fn_zexth(inp.rs1);   // fn to zero extend
+      valid = True;
+    end
+    `SLLIUW: begin
+      result = fn_slliuw(inp.rs1,inp.instr);   // fn to do slliuw
+      valid = True;
+    end
+    `SEXTB: begin
+      result = fn_sextb(inp.rs1);   // fn to do slliuw
       valid = True;
     end
       default: begin

@@ -16,7 +16,7 @@ Note - if instr has single operand, take rs1 as an operand
 '''
 
 import test_bbox as tb    # importing test_bbox module to use the dictionary defined in the module
-
+import math as mt      # importing math module to calculate log values
 
 def twos_complement(val, nbits):
     """Compute the 2's complement of int value val"""
@@ -255,7 +255,7 @@ def bbox_rm(instr, rs1, rs2, XLEN):
         res = rs1 | (1 << index)
         valid ='1'
 
-    # New Additions
+    
     # Logic for sh1add
     elif instr == values[20]:
         res = rs2 + (rs1 << 1)
@@ -293,8 +293,6 @@ def bbox_rm(instr, rs1, rs2, XLEN):
         res=0
         temp = '{:064b}'.format(rs1)
         temp2 = 32 * '0' + temp[32:]
-        print(temp)
-        print(temp2)
         rs1 = int(temp2,2)
         res = rs1 + rs2
         valid = '1'
@@ -305,11 +303,8 @@ def bbox_rm(instr, rs1, rs2, XLEN):
         temp = '{:064b}'.format(rs1)
         temp2 = temp[32:]
         # temp2 <<= 1
-        print(temp)
-        print(temp2)
         rs1 = int(temp2,2)
         rs1 <<=1
-        print(rs1)
         res = rs1 + rs2
         valid = '1'
 
@@ -319,11 +314,8 @@ def bbox_rm(instr, rs1, rs2, XLEN):
         temp = '{:064b}'.format(rs1)
         temp2 = temp[32:]
         # temp2 <<= 1
-        print(temp)
-        print(temp2)
         rs1 = int(temp2,2)
         rs1 <<=2
-        print(rs1)
         res = rs1 + rs2
         valid = '1'
 
@@ -333,11 +325,8 @@ def bbox_rm(instr, rs1, rs2, XLEN):
         temp = '{:064b}'.format(rs1)
         temp2 = temp[32:]
         # temp2 <<= 1
-        print(temp)
-        print(temp2)
         rs1 = int(temp2,2)
         rs1 <<=3
-        print(rs1)
         res = rs1 + rs2
         valid = '1'
 
@@ -350,9 +339,7 @@ def bbox_rm(instr, rs1, rs2, XLEN):
             rs1<<=1
             rs2>>=1
         temp = '{:064b}'.format(res)
-        # print(temp[-16:])
         temp=48 * '0'+temp[-16:]
-        # print(type(temp))
         res=int(temp,2)
         valid='1'
 
@@ -365,11 +352,96 @@ def bbox_rm(instr, rs1, rs2, XLEN):
             rs1<<=1
             rs2>>=1
         temp = '{:064b}'.format(res)
-        # print(temp[-31:-16])
         temp=32 * '0'+temp[-31:-16]+16 * '0'
-        # print(type(temp))
         res=int(temp,2)
         valid='1'
+
+    # Logic to implement rotate left --- rol
+    elif instr == values[29]:
+        res = 0
+        bin_rs1 = '{:064b}'.format(rs1)
+        
+        bin_rs2 = '{:064b}'.format(rs2)
+        lower_bits = int(mt.log2(XLEN),2)
+        shamt = int(bin_rs2[59:])
+        res = (rs1  << (shamt) ) | (rs1 >> (XLEN - shamt))
+        valid ='1'
+
+    # Logic to implement rotate right --- ror
+    elif instr == values[30]:
+        res = 0
+        bin_rs1 = '{:064b}'.format(rs1)
+        bin_rs2 = '{:064b}'.format(rs2)
+        lower_bits = int(mt.log2(XLEN))
+        shamt = int(bin_rs2[XLEN-lower_bits:],2)
+        res = (rs1 >> shamt) | (rs1 << (XLEN - shamt))
+        valid = '1'
+
+    # Logic to implemnet zero extend halfword -- zext.h
+    elif instr == values[31]:
+        
+        bin_rs1 = '{:064b}'.format(rs1)
+        temp = bin_rs1[48:]  # least significant half word 48-64 , 16 bits
+        temp1 = (XLEN-16)*'0'  # fill XLEN-16 bits with '0'
+        res = temp1+temp   # concat strings
+        valid ='1'
+    
+    # logic to implement single -left unsigned word (immediate) -- slliuw
+    elif instr == values[32]:
+        bin_rs1 = '{:064b}'.format(rs1)
+        shamt = instr
+        temp = bin_rs1[32:]  # least significant word
+        temp1 = (XLEN-32)*'0'  # fill remaining 32 bits with zero
+        temp1 = temp1 + temp   # concat strings
+        res = int(temp1,2) << shamt
+        valid = '1'
+        
+
+
+     # logic to implement sext.b
+    elif instr == values[33]:
+        
+        bin_rs1 = '{:064b}'.format(rs1) 
+        temp = bin_rs1[56]
+        x = 57*temp
+        res = int(x + bin_rs1[57:],2)
+        valid = '1'
+
+    # orc.b
+    elif instr == values[34]:
+        rs1 = 0x11111111111111111
+        bin_rs1 = '{:064b}'.format(rs1)
+        lower = 65
+        higher = 56
+        result = '0'*64
+        flag = 0
+        while (higher >= 0):
+            byte = bin_rs1[higher:lower]
+            flag = 0
+            print(higher,lower,byte)
+            
+            for i in range(8):
+                if(byte[i] == '1'):
+                    
+                    result = result[:higher] + '1'*8 + result[lower:]
+                    print("byte",result)
+                    
+                    flag =1
+                    break 
+            if(not flag):
+                result = result[:higher] + '0'*8 + result[lower:]
+            higher = higher - 8
+            lower = lower - 8
+        
+        res = int(result,2) 
+            
+
+
+        
+
+
+
+
     ## logic for all other instr ends
     else:
         res = 0

@@ -7,7 +7,7 @@ function Bit#(XLEN) fn_clmul(Bit#(XLEN) rs1,Bit#(XLEN) rs2);
         outputs = outputs ^ (rs1 * (rs2 & 1));
         rs1 = rs1 << 1;
         rs2 = rs2 >> 1;
-        end
+      end
       outputs = outputs & temp;
       return outputs;
   endfunction

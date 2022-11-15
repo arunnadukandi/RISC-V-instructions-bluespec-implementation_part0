@@ -151,15 +151,7 @@ endfunction
 
 // function to find minimum of two Signed numbers
 function Bit#(XLEN) fn_min(Bit#(XLEN) rs1,Bit#(XLEN) rs2);
-  // Bit#(XLEN) res = (unpack(rs1)<unpack(rs2)) ? rs2 : rs1;
-  // Bit#(XLEN) result;
-  // if(rs1 < rs2) begin
-  //   result = rs1;
-  // end
-  // else begin
-  //   result = rs2;
-  // end
-
+  
   Bit#(XLEN) result=0,min_rs1=0 ,min_rs2=0;
   Bit#(XLEN) neg_rs1= 0,neg_rs2 = 0;
   if( rs1 < 0 && rs2 < 0) begin
@@ -202,5 +194,50 @@ function Bit#(XLEN) fn_minU(Bit#(XLEN) rs1,Bit#(XLEN) rs2);
 endfunction
 
 
+// ROL and ROR not implemented 
+// Function to implement rotate left -- rol
+function Bit#(XLEN) fn_rol(Bit#(XLEN) rs1, Bit#(XLEN)rs2);
+  Bit#(XLEN) result;
+  let lower_bits = log2(valueOf(XLEN));
+  Bit#(lower_bits) shamt = rs2[lower_bits:0] ;   // since xlen = 64 , assign least significant 6 bits of rs2 to shamt
+  result = ((rs1 << (rs2 & 63)) | rs1 >> (fromInteger(valueOf(XLEN))- (rs2 & 63)));
+  return result;
+endfunction
 
-  
+//Function to implement rotate right -- ror   
+function Bit#(XLEN) fn_ror(Bit#(XLEN) rs1, Bit#(XLEN)rs2);
+  Bit#(XLEN) result;
+  let lower_bits = log2(valueOf(XLEN));
+  Bit#(lower_bits) shamt = rs2[lower_bits:0] ;   // since xlen = 64 , assign least significant 6 bits of rs2 to shamt
+  result = ((rs1 >> (rs2& 63))) | rs1 << (fromInteger(valueOf(XLEN))-(rs2 & 63));
+  return result;
+endfunction
+
+
+// Function to implement zero extend halfword -- zext.h
+
+function Bit#(XLEN) fn_zexth(Bit#(XLEN) rs1);
+  Bit#(16) temp = truncate(rs1);    // truncate the MSB
+  Bit#(XLEN) result = zeroExtend(temp);   // zeroExtend temp to XLEN 
+  return result;
+endfunction
+
+
+
+// Function to implement sextb
+
+function Bit#(XLEN) fn_sextb(Bit#(XLEN) rs1);
+  Bit#(XLEN) result ;
+  Bit#(8) temp = truncate(rs1) ;  // store the least significant 8 bits
+  result = signExtend(temp);
+  return result;
+endfunction
+
+
+
+
+
+
+
+
+    

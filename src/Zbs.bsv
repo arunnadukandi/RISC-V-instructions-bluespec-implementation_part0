@@ -61,6 +61,8 @@ function Bit#(XLEN) fn_bclr(Bit#(XLEN) rs1, Bit#(XLEN) rs2);
     return result;
   endfunction 
 
+  
+
 
 
 
